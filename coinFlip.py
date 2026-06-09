@@ -11,10 +11,10 @@ probabilidadeCara = 0.3
 acoes = {numEstadoParaNome[estado]:
             {aposta : 
                 {numEstadoParaNome[estado + aposta]: 
-                    {1 if estado + aposta == valorMaximo or estado + aposta == 0 else 0 : 
+                    {1 if estado + aposta == valorMaximo else 0 : 
                         probabilidadeCara}, 
                 numEstadoParaNome[estado - aposta]: 
-                    {1 if estado - aposta == valorMaximo or estado - aposta == 0 else 0 : 
+                    {1 if estado - aposta == 0 else 0 : 
                         1 - probabilidadeCara}} 
         for aposta in range(0, min(estado, valorMaximo - estado) + 1)} for estado in numEstado}
 acoes["Sderrota"] = {1: {"Sfinal": {0: 1}}}
