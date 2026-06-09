@@ -1,7 +1,7 @@
-def iterativePolicyEvaluation(theta, politica, estados, acoes, desconto):
+def iterativePolicyEvaluation(theta, politica, estados, acoes, desconto, nomeUltimoEstado):
     delta = float("inf")
     values = {estado: 500 for estado in estados}
-    values["Sfinal"] = 0
+    values[nomeUltimoEstado] = 0
     while delta >= theta:
         delta = 0
         for estado in estados:
@@ -15,11 +15,11 @@ def iterativePolicyEvaluation(theta, politica, estados, acoes, desconto):
             delta = max(delta, abs(v - values[estado]))
     return values
 
-def policyIteration(politica, estados, acoes, desconto):
+def policyIteration(politica, estados, acoes, desconto, nomeUltimoEstado):
     politicaEstavel = False
     while not politicaEstavel:
         politicaEstavel = True
-        values = iterativePolicyEvaluation(0.001, politica, estados, acoes, desconto)
+        values = iterativePolicyEvaluation(0.001, politica, estados, acoes, desconto, nomeUltimoEstado)
         for estado in estados:
             acaoAntiga = list(politica[estado].keys())[0]
             custoMelhorAcao = values[estado]
@@ -34,10 +34,10 @@ def policyIteration(politica, estados, acoes, desconto):
                 politicaEstavel = False  
     return [politica, values]
 
-def valueInteration(theta, estados, acoes, desconto, acoesPolitica):
+def valueInteration(theta, estados, acoes, desconto, acoesPolitica, nomeUltimoEstado):
     delta = float("inf")
     values = {estado: 500 for estado in estados}
-    values["Sfinal"] = 0
+    values[nomeUltimoEstado] = 0
     politicaOtima = {estado: {acao: 1 for acao in acoesPolitica[estado]} for estado in estados}
     while delta >= theta:
         delta = 0

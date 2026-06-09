@@ -38,4 +38,4 @@ acoesPolitica = {
 desconto = 1
 politica = {estado: {acao: 1 for acao in acoesPolitica[estado]} for estado in estados}
 
-print(ProgramacaoDinamicaMDP.valueInteration(0.001, estados, acoes, desconto, acoesPolitica))
+print(ProgramacaoDinamicaMDP.valueInteration(0.001, estados, acoes, desconto, acoesPolitica, "Sfinal"))
