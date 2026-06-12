@@ -1,6 +1,7 @@
 import ProgramacaoDinamicaMDP as pdMDP
 
-import matplotlib.pyplot as plt
+import graficos
+
 
 valorMaximo = 100
 numEstado = {i for i in range(1, valorMaximo)}
@@ -32,21 +33,4 @@ acoesPolitica = {numEstadoParaNome[i]: {0} for i in range(0, valorMaximo)}
 #print(pdMDP.valueInteration(0.001, estados, acoes, 1, acoesPolitica, "Sfinal"))
 convergencia = pdMDP.policyIteration(politica, estados, acoes, 1, "Sfinal")
 
-politica = convergencia[0]
-acoesPolitica = {}
-for estado in politica.keys():
-    acoesPolitica[estado] = list(politica[estado].keys())
-estadoValues = convergencia[1].keys()
-values = convergencia[1].values()
-
-plt.plot(estadoValues, values)
-plt.xlabel("Estado")
-plt.ylabel("Valor")
-plt.title("Convergência do Valor")
-plt.show()
-
-plt.plot(acoesPolitica.keys(), acoesPolitica.values())
-plt.xlabel("Estado")
-plt.ylabel("Acao")
-plt.title("Ações de cada estado")
-plt.show()
+graficos.mostraGraficos(convergencia)
