@@ -44,7 +44,7 @@ def valueInteration(theta, estados, acoes, desconto, acoesPolitica, nomeUltimoEs
         for estado in estados:
             
             v = values[estado]
-            values[estado] = float("-inf")
+            values[estado] = -1000000
             #values[estado] = max(sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * values[estado_proximo]) for estado_proximo in acoes[estado][acao] for recompensa in list(acoes[estado][acao][estado_proximo].keys()) ) for acao in list(acoes[estado].keys()))
             for acao in list(acoes[estado].keys()):
                 custoAcao = sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * values[estado_proximo]) for estado_proximo in acoes[estado][acao] for recompensa in list(acoes[estado][acao][estado_proximo].keys()) )
