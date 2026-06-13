@@ -8,11 +8,20 @@ def mostraGraficos(convergencia):
     estadoValues = convergencia[1].keys()
     values = convergencia[1].values()
 
-    plt.plot(estadoValues, values)
+    fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, layout="constrained")
+
+
+    axs.scatter(estadoValues, values, s=80, marker=".")
+    axs.set_title("Convergência do Valor")
+    axs.set_xlabel("Estado")
+    axs.set_ylabel("Valor")
+    plt.show()
+
+    ''' plt.plot(estadoValues, values)
     plt.xlabel("Estado")
     plt.ylabel("Valor")
     plt.title("Convergência do Valor")
-    plt.show()
+    plt.show()'''
 
     plt.plot(acoesPolitica.keys(), acoesPolitica.values())
     plt.xlabel("Estado")
