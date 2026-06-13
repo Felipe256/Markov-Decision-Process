@@ -8,10 +8,11 @@ def iterativePolicyEvaluation(theta, politica, estados, acoes, desconto, nomeUlt
             v = values[estado]
             values[estado] = 0
             for acao in list(politica[estado].keys()):
-                for estado_proximo in acoes[estado][acao]:
+                for estado_proximo in list(acoes[estado][acao].keys()):
                     for recompensa in list(acoes[estado][acao][estado_proximo].keys()):
                         probabilidade = acoes[estado][acao][estado_proximo][recompensa]
-                        values[estado] += (politica[estado][acao] * probabilidade * (recompensa + desconto * values[estado_proximo]))
+                        valorProximoEstado = values[estado_proximo] if estado_proximo != estado else v
+                        values[estado] += (politica[estado][acao] * probabilidade * (recompensa + desconto * valorProximoEstado))
             delta = max(delta, abs(v - values[estado]))
     return values
 
@@ -22,7 +23,7 @@ def policyIteration(politica, estados, acoes, desconto, nomeUltimoEstado):
         values = iterativePolicyEvaluation(0.001, politica, estados, acoes, desconto, nomeUltimoEstado)
         for estado in estados:
             acaoAntiga = list(politica[estado].keys())[0]
-            custoMelhorAcao = values[estado]
+            custoMelhorAcao = float("-inf")
             melhorAcao = acaoAntiga
             for acao in list(acoes[estado].keys()):
                 custoAcao = sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * values[estado_proximo]) for estado_proximo in acoes[estado][acao] for recompensa in list(acoes[estado][acao][estado_proximo].keys()) )
