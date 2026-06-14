@@ -48,12 +48,13 @@ def valueIteration(theta, valorInicialEstados, estados, acoes, desconto, acoesPo
             values[estado] = -1000000
             #values[estado] = max(sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * values[estado_proximo]) for estado_proximo in acoes[estado][acao] for recompensa in list(acoes[estado][acao][estado_proximo].keys()) ) for acao in list(acoes[estado].keys()))
             for acao in list(acoes[estado].keys()):
+                custoAcao = 0
                 for estado_proximo in acoes[estado][acao]:
                     valorProximoEstado = values[estado_proximo] if estado_proximo != estado else v
-                    custoAcao = sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * valorProximoEstado) for recompensa in list(acoes[estado][acao][estado_proximo].keys()) )
-                    if values[estado] < custoAcao:
-                        values[estado] = custoAcao
-                        politicaOtima[estado] = {acao: 1}
+                    custoAcao += sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * valorProximoEstado) for recompensa in list(acoes[estado][acao][estado_proximo].keys()) )
+                if values[estado] < custoAcao:
+                    values[estado] = custoAcao
+                    politicaOtima[estado] = {acao: 1}
             delta = max(delta, abs(v - values[estado]))
     return [politicaOtima, values]
 
