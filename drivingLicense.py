@@ -22,5 +22,5 @@ acoes = {numEstadoParaNome[estado] :
         }
 politica = {numEstadoParaNome[i]: {1  : 1} for i in numEstado}
 acoesPolitica = {numEstadoParaNome[i]: {1} for i in numEstado}
-#graficos.mostraGraficos(pdMDP.policyIteration(politica, estados, acoes, 1, "Sfinal"))
-graficos.mostraGraficos(pdMDP.valueInteration(0.000001, estados, acoes, 1, acoesPolitica, "Sfinal"))
+#graficos.mostraGraficos(pdMDP.policyIteration(500, politica, estados, acoes, 1, "Sfinal"))
+graficos.mostraGraficos(pdMDP.valueIteration(0.001, 500, estados, acoes, 1, acoesPolitica, "Sfinal"))

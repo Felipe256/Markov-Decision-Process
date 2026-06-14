@@ -3,7 +3,7 @@ import ProgramacaoDinamicaMDP as pdMDP
 import graficos
 
 
-valorMaximo = 100
+valorMaximo = 4
 numEstado = {i for i in range(1, valorMaximo)}
 numEstadoParaNome = {estado : "S"+str(estado) for estado in numEstado}
 numEstadoParaNome[0] ="Sderrota"
@@ -27,10 +27,10 @@ for estado in numEstadoParaNome.values():
     acoes[estado][0] = {estado: {0: 1}}
 
 #print("acoes: " + str(acoes))
-politica = {numEstadoParaNome[i]: {0  : 1} for i in range(0, valorMaximo)}
+politica = {numEstadoParaNome[i]: {min(i, valorMaximo - i)  : 1} for i in range(0, valorMaximo)}
 acoesPolitica = {numEstadoParaNome[i]: {0} for i in range(0, valorMaximo)}
 #print("politica: " + str(politica))
-#print(pdMDP.valueInteration(0.001, estados, acoes, 1, acoesPolitica, "Sfinal"))
-convergencia = pdMDP.policyIteration(politica, estados, acoes, 1, "Sfinal")
+#convergencia = pdMDP.valueIteration(0.001, -500, estados, acoes, 1, acoesPolitica, "Sfinal")
+convergencia = pdMDP.policyIteration(-500, politica, estados, acoes, 1, "Sfinal")
 
 graficos.mostraGraficos(convergencia)

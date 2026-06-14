@@ -1,6 +1,6 @@
-def iterativePolicyEvaluation(theta, politica, estados, acoes, desconto, nomeUltimoEstado):
+def iterativePolicyEvaluation(theta, valorInicialEstados, politica, estados, acoes, desconto, nomeUltimoEstado):
     delta = float("inf")
-    values = {estado: 500 for estado in estados}
+    values = {estado: valorInicialEstados for estado in estados}
     values[nomeUltimoEstado] = 0
     while delta >= theta:
         delta = 0
@@ -16,11 +16,11 @@ def iterativePolicyEvaluation(theta, politica, estados, acoes, desconto, nomeUlt
             delta = max(delta, abs(v - values[estado]))
     return values
 
-def policyIteration(politica, estados, acoes, desconto, nomeUltimoEstado):
+def policyIteration(valorInicialEstados, politica, estados, acoes, desconto, nomeUltimoEstado):
     politicaEstavel = False
     while not politicaEstavel:
         politicaEstavel = True
-        values = iterativePolicyEvaluation(0.001, politica, estados, acoes, desconto, nomeUltimoEstado)
+        values = iterativePolicyEvaluation(0.001, valorInicialEstados, politica, estados, acoes, desconto, nomeUltimoEstado)
         for estado in estados:
             acaoAntiga = list(politica[estado].keys())[0]
             custoMelhorAcao = float("-inf")
@@ -35,9 +35,9 @@ def policyIteration(politica, estados, acoes, desconto, nomeUltimoEstado):
                 politicaEstavel = False  
     return [politica, values]
 
-def valueInteration(theta, estados, acoes, desconto, acoesPolitica, nomeUltimoEstado):
+def valueIteration(theta, valorInicialEstados, estados, acoes, desconto, acoesPolitica, nomeUltimoEstado):
     delta = float("inf")
-    values = {estado: 500 for estado in estados}
+    values = {estado: valorInicialEstados for estado in estados}
     values[nomeUltimoEstado] = 0
     politicaOtima = {estado: {acao: 1 for acao in acoesPolitica[estado]} for estado in estados}
     while delta >= theta:
@@ -48,10 +48,12 @@ def valueInteration(theta, estados, acoes, desconto, acoesPolitica, nomeUltimoEs
             values[estado] = -1000000
             #values[estado] = max(sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * values[estado_proximo]) for estado_proximo in acoes[estado][acao] for recompensa in list(acoes[estado][acao][estado_proximo].keys()) ) for acao in list(acoes[estado].keys()))
             for acao in list(acoes[estado].keys()):
-                custoAcao = sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * values[estado_proximo]) for estado_proximo in acoes[estado][acao] for recompensa in list(acoes[estado][acao][estado_proximo].keys()) )
-                if values[estado] < custoAcao:
-                    values[estado] = custoAcao
-                    politicaOtima[estado] = {acao: 1}
+                for estado_proximo in acoes[estado][acao]:
+                    valorProximoEstado = values[estado_proximo] if estado_proximo != estado else v
+                    custoAcao = sum(acoes[estado][acao][estado_proximo][recompensa] * (recompensa + desconto * valorProximoEstado) for recompensa in list(acoes[estado][acao][estado_proximo].keys()) )
+                    if values[estado] < custoAcao:
+                        values[estado] = custoAcao
+                        politicaOtima[estado] = {acao: 1}
             delta = max(delta, abs(v - values[estado]))
     return [politicaOtima, values]
 

@@ -1,4 +1,5 @@
 import ProgramacaoDinamicaMDP
+import graficos
 
 estados = {"S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14"}
 acoes = {
@@ -38,4 +39,6 @@ acoesPolitica = {
 desconto = 1
 politica = {estado: {acao: 1 for acao in acoesPolitica[estado]} for estado in estados}
 
-print(ProgramacaoDinamicaMDP.valueInteration(0.001, estados, acoes, desconto, acoesPolitica, "Sfinal"))
+#convergencia = ProgramacaoDinamicaMDP.valueIteration(0.001, 0, estados, acoes, desconto, acoesPolitica, "Sfinal")
+convergencia = ProgramacaoDinamicaMDP.policyIteration(0, politica, estados, acoes, desconto, "Sfinal")
+print(convergencia)
