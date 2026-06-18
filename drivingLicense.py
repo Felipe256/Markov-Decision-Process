@@ -1,4 +1,5 @@
 import ProgramacaoDinamicaMDP as pdMDP
+import ExponentialUtilityFunctionRSMDP as EUF
 import graficos
 
 numEstado = {i for i in range(0,11)}
@@ -23,4 +24,9 @@ acoes = {numEstadoParaNome[estado] :
 politica = {numEstadoParaNome[i]: {1  : 1} for i in numEstado}
 acoesPolitica = {numEstadoParaNome[i]: {1} for i in numEstado}
 #graficos.mostraGraficos(pdMDP.policyIteration(500, politica, estados, acoes, 1, "Sfinal"))
-graficos.mostraGraficos(pdMDP.valueIteration(0.001, 500, estados, acoes, 1, acoesPolitica, "Sfinal"))
+#pdMDP.valueIteration(0.001, 500, estados, acoes, 1, acoesPolitica, "Sfinal")
+
+lmbda = 0.5
+print(str(lmbda)+" "+str(EUF.policyIteration(lmbda, 0.00001, 500, politica, estados, acoes, 1, "Sfinal")[0])+"\n")
+'''convergencia = 
+graficos.mostraGraficos(convergencia)'''
