@@ -23,14 +23,14 @@ acoes = {numEstadoParaNome[estado] :
             }   
         for estado in numEstado 
         }
-politica = {numEstadoParaNome[i]: {1  : 1} for i in numEstado}
+politica = {numEstadoParaNome[i]: {0  : 1} for i in numEstado}
 acoesPolitica = {numEstadoParaNome[i]: {1} for i in numEstado}
 heuristica = {numEstadoParaNome[i]: 1 for i in numEstado}
 heuristica["Sfinal"] = 0
-graficos.mostraGraficos(pdMDP.costPolicyIteration(500, politica, estados, acoes, 1, "Sfinal"))
+#graficos.mostraGraficos(pdMDP.costPolicyIteration(500, politica, estados, acoes, 1, "Sfinal"))
 
-lmbda = 0.5
-print(str(lmbda)+" "+str(EUF.policyIteration(lmbda, 0.00001, 500, politica, estados, acoes, 1, "Sfinal")[0])+"\n")
+lmbda = [0.7, 0.5, 0.4, 0.3, 0.2, 0.1, 0, -0.1, -0.2, -0.3, -0.4, -0.5, -0.6]
+{ print(str(lb)+" "+str(EUF.policyIteration(lb, 0.00001, 500, politica, estados, acoes, 1, "Sfinal")[0])+"\n")  for lb in lmbda }
 
 '''kPLT = -0.2
 convergencia = PLT.policyIteration(kPLT, 500, politica, estados, acoes, 1, "Sfinal")

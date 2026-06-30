@@ -25,11 +25,11 @@ def policyIteration(lmbda, theta, valorInicialEstados, politica, estados, acoes,
         values = iterativePolicyEvaluation(lmbda, theta, valorInicialEstados, politica, estados, acoes, desconto, nomeUltimoEstado)
         for estado in estados:
             acaoAntiga = list(politica[estado].keys())[0]
-            custoMelhorAcao = float("-inf")
+            custoMelhorAcao = float("inf")
             melhorAcao = acaoAntiga
             for acao in list(acoes[estado].keys()):
                 custoAcao = sum(acoes[estado][acao][estado_proximo][recompensa] * (np.exp(-lmbda * recompensa) * desconto * values[estado_proximo]) for estado_proximo in acoes[estado][acao] for recompensa in list(acoes[estado][acao][estado_proximo].keys()) )
-                if custoMelhorAcao < custoAcao:
+                if custoMelhorAcao > custoAcao:
                     custoMelhorAcao = custoAcao
                     melhorAcao = acao
             if melhorAcao != acaoAntiga:
