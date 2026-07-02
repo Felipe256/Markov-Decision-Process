@@ -14,7 +14,7 @@ def calculaValorPoliticaEUT(politica, comeco, fim, quantidade, estados, acoes, n
         for i in range(len(politica)):
             valorS0 = EUF.iterativePolicyEvaluation(num, 0.00001, 500, politica[i], estados, acoes, 1, nomeUltimoEstado)["S0"]
             valores[i].append(np.log(valorS0)/ (num if num != 0 else 1))
-    graficos.geraGrafico(intervalo, valores, "Interações de lambda sobre a politica", "lambda", "Valor da politica EUT", cores, estilosLinha)
+    graficos.geraGrafico(intervalo, valores, "Interações de lambda sobre a politica", "lambda", "log(value)/lambda", cores, estilosLinha)
 
 numEstado = {i for i in range(0,11)}
 numEstadoParaNome = {estado : "S"+str(estado) for estado in numEstado}
@@ -43,7 +43,7 @@ politicas = [
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {3: 1}, 'S7': {2: 1}, 'S8': {1: 1}, 'S9': {0: 1}, 'S10': {0: 1}}, 
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {3: 1}, 'S8': {2: 1}, 'S9': {1: 1}, 'S10': {0: 1}}, 
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {3: 1}, 'S9': {2: 1}, 'S10': {1: 1}}, 
-    {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {3: 1}, 'S10': {2: 1}} 
+    {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {3: 1}, 'S10': {0: 1}} 
     ,{'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {3: 1}, 'S10': {1: 1}}, 
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {3: 1}, 'S10': {2: 1}}, 
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1},'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {4: 1}, 'S10': {3: 1}}, 
