@@ -49,14 +49,10 @@ politicas = [
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1},'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {4: 1}, 'S10': {3: 1}}, 
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {4: 1}, 'S10': {4: 1}}
     ]
-#graficos.mostraGraficos(pdMDP.costPolicyIteration(500, politica, estados, acoes, 1, "Sfinal"))
-
-calculaValorPoliticaEUT(politicas, -0.8, 0.8, 1600, estados, acoes, "Sfinal")
-
-#mbda = [0.7, 0.5, 0.4, 0.3, 0.2, 0.1, 0, -0.1, -0.2, -0.3, -0.4, -0.5, -0.6]
-#{ print(str(lb)+" "+str(EUF.policyIteration(lb, 0.00001, 500, politica, estados, acoes, 1, "Sfinal")[0])+"\n")  for lb in lmbda }
 
 '''kPLT = -0.2
 convergencia = PLT.policyIteration(kPLT, 500, politica, estados, acoes, 1, "Sfinal")
-graficos.mostraGraficos(convergencia)
-print(VaT.ForPECVaR(heuristica, 0.05, politica, estados, acoes, 1, "S0", "Sfinal"))'''
+graficos.mostraGraficos(convergencia)'''
+heuristica = {estado: 0.1 for estado in estados}
+heuristica["Sfinal"] = 0
+print(VaT.ForPECVaR(heuristica, 0.05, politicas[0], estados, acoes, 1, "S0", "Sfinal"))
