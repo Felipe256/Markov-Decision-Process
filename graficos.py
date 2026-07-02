@@ -1,5 +1,16 @@
 import matplotlib.pyplot as plt
 
+def geraGrafico(x, y, titulo, xlabel, ylabel, cor, linestyle):
+    fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, layout="constrained")
+    for i in range(len(y)):
+        axs.plot(x, y[i], color=cor[i], lw=1.0, label="Politica "+str(i+1), linestyle=linestyle[i])
+    axs.legend()
+    axs.set_xlabel(xlabel)
+    axs.set_ylabel(ylabel)
+
+    plt.savefig('GraficoValorPolitica.png', dpi=300, bbox_inches='tight')
+    plt.show()
+
 def mostraGraficos(convergencia):
     politica = convergencia[0]
     acoesPolitica = {}
