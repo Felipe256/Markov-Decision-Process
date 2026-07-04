@@ -53,6 +53,48 @@ def calculaValorPoliticaPLT(politica, comeco, fim, quantidade, estados, acoes, n
         
     graficos.geraGrafico(intervalo, valores, "Interações de k sobre a politica", "k", "log(value)", cores, estilosLinha)
 
+def calculaValorPoliticaVaR(heuristica, politica, comeco, fim, quantidade, estados, acoes, nomeUltimoEstado):
+    intervalo = np.linspace(comeco, fim, num = quantidade)
+    valores = [[] for i in range(len(politica))]
+    cores = ["blue", "green", "red", "cyan", "pink", "black", "blue", "green", "red", "cyan", "pink", "black"]
+    estilosLinha = ["-", "-", "-", "-", "-", "-", "--", "--", "--", "--", "--", "--"]
+    ordenacoes = []
+    d = SortedDict()
+    for num in intervalo:
+        d = SortedDict()
+        for i in range(len(politica)):
+            valorS0 = VaT.ForPECVaR(heuristica, num, politica[i], estados, acoes, 1, "S0", nomeUltimoEstado)[1]
+            valores[i].append(np.log(valorS0))
+            d[np.log(valorS0)] = i
+        ordenacao = list(d.values())
+        if(ordenacao not in ordenacoes):
+            ordenacoes.append(ordenacao)
+    with open("VaR.txt", "w", encoding="utf-8") as arquivo:
+        arquivo.write(str(ordenacoes))
+
+    graficos.geraGrafico(intervalo, valores, "Interações de alfa sobre a politica", "alfa", "log(value)", cores, estilosLinha)
+
+def calculaValorPoliticaCVaR(heuristica, politica, comeco, fim, quantidade, estados, acoes, nomeUltimoEstado):
+    intervalo = np.linspace(comeco, fim, num = quantidade)
+    valores = [[] for i in range(len(politica))]
+    cores = ["blue", "green", "red", "cyan", "pink", "black", "blue", "green", "red", "cyan", "pink", "black"]
+    estilosLinha = ["-", "-", "-", "-", "-", "-", "--", "--", "--", "--", "--", "--"]
+    ordenacoes = []
+    d = SortedDict()
+    for num in intervalo:
+        d = SortedDict()
+        for i in range(len(politica)):
+            valorS0 = VaT.ForPECVaR(heuristica, num, politica[i], estados, acoes, 1, "S0", nomeUltimoEstado)[0]["S0"][num]
+            valores[i].append(np.log(valorS0))
+            d[np.log(valorS0)] = i
+        ordenacao = list(d.values())
+        if(ordenacao not in ordenacoes):
+            ordenacoes.append(ordenacao)
+    with open("CVaR.txt", "w", encoding="utf-8") as arquivo:
+        arquivo.write(str(ordenacoes))
+
+    graficos.geraGrafico(intervalo, valores, "Interações de alfa sobre a politica", "alfa", "log(value)", cores, estilosLinha)
+
 numEstado = {i for i in range(0,11)}
 numEstadoParaNome = {estado : "S"+str(estado) for estado in numEstado}
 estados = numEstadoParaNome.values()
@@ -87,9 +129,13 @@ politicas = [
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {4: 1}, 'S10': {4: 1}}
     ]
 
-calculaValorPoliticaEUT(politicas, -0.8, 0.8, 1600, estados, acoes, "Sfinal")
+#calculaValorPoliticaEUT(politicas, -0.8, 0.8, 1600, estados, acoes, "Sfinal")
 
 #calculaValorPoliticaPLT(politicas, 0.99, -0.99, 2000, estados, acoes, "Sfinal")
+
+heuristica = {estado: 0.1 for estado in estados}
+heuristica["Sfinal"] = 0
+calculaValorPoliticaCVaR(heuristica, politicas, 0.001, 0.999, 10000, estados, acoes, "Sfinal")
 
 '''heuristica = {estado: 0.1 for estado in estados}
 heuristica["Sfinal"] = 0
