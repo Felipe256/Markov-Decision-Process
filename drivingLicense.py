@@ -2,6 +2,7 @@ import ProgramacaoDinamicaMDP as pdMDP
 import ExponentialUtilityFunctionRSMDP as EUF
 import PiecewiseLinearTransformationRSMDP as PLT
 import ValueAtRiskRSMDP as VaT
+import copy
 import numpy as np
 from sortedcontainers import SortedDict
 import graficos
@@ -95,6 +96,43 @@ def calculaValorPoliticaCVaR(heuristica, politica, comeco, fim, quantidade, esta
 
     graficos.geraGrafico(intervalo, valores, "Interações de alfa sobre a politica", "alfa", "log(value)", cores, estilosLinha)
 
+def calculaValorPoliticaMV(politica, comeco, fim, quantidade, estados, acoes, nomeUltimoEstado):
+    intervalo = np.linspace(comeco, fim, num = quantidade)
+    valores = [[] for i in range(len(politica))]
+    valoresExpe = valores.copy()
+    valoresQuad = valores.copy()
+    acoesQuad = {}
+    for estado in estados:
+        acoesQuad[estado] = {}
+        for acao in acoes[estado]:
+            acoesQuad[estado][acao] = {}
+            for estado_proximo in acoes[estado][acao]:
+                acoesQuad[estado][acao][estado_proximo] = {}
+                for recompensa in acoes[estado][acao][estado_proximo]:
+                    acoesQuad[estado][acao][estado_proximo][recompensa**2] = acoes[estado][acao][estado_proximo][recompensa]
+    for i in range(len(politica)):
+        valoresExpe[i] = pdMDP.iterativePolicyEvaluation(0.001, 500, politica[i], estados, acoes, 1, nomeUltimoEstado)
+        valoresQuad[i] = pdMDP.iterativePolicyEvaluation(0.001, 500, politica[i], estados, acoesQuad, 1, nomeUltimoEstado)
+    cores = ["blue", "green", "red", "cyan", "pink", "black", "blue", "green", "red", "cyan", "pink", "black"]
+    estilosLinha = ["-", "-", "-", "-", "-", "-", "--", "--", "--", "--", "--", "--"]
+    ordenacoes = []
+    d = SortedDict()
+    for num in intervalo:
+        d = SortedDict()
+        for i in range(len(politica)):
+            valorS0 = valoresExpe[i]["S0"] + num * (valoresQuad[i]["S0"] - valoresExpe[i]["S0"]**2)   
+            valores[i].append(valorS0)
+            d[valorS0] = i
+        ordenacao = list(d.values())
+        if(ordenacao not in ordenacoes):
+            ordenacoes.append(ordenacao)
+    with open("MV.txt", "w", encoding="utf-8") as arquivo:
+        arquivo.write(str(ordenacoes))
+
+    graficos.geraGrafico(intervalo, valores, "Interações de mi sobre a politica", "mi", "value", cores, estilosLinha)
+
+
+
 numEstado = {i for i in range(0,11)}
 numEstadoParaNome = {estado : "S"+str(estado) for estado in numEstado}
 estados = numEstadoParaNome.values()
@@ -133,10 +171,10 @@ politicas = [
 
 #calculaValorPoliticaPLT(politicas, 0.99, -0.99, 2000, estados, acoes, "Sfinal")
 
-heuristica = {estado: 0.1 for estado in estados}
-heuristica["Sfinal"] = 0
-calculaValorPoliticaCVaR(heuristica, politicas, 0.001, 0.999, 10000, estados, acoes, "Sfinal")
-
 '''heuristica = {estado: 0.1 for estado in estados}
 heuristica["Sfinal"] = 0
-print(VaT.ForPECVaR(heuristica, 0.05, politicas[0], estados, acoes, 1, "S0", "Sfinal"))'''
+
+calculaValorPoliticaVaR(heuristica, politicas, 0.001, 0.999, 10000, estados, acoes, "Sfinal")
+calculaValorPoliticaCVaR(heuristica, politicas, 0.001, 0.999, 10000, estados, acoes, "Sfinal")'''
+
+calculaValorPoliticaMV(politicas, -0.1, 0.5, 100000, estados, acoes, "Sfinal")
