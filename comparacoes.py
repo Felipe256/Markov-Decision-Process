@@ -37,6 +37,16 @@ def uniao(listas):
                 uniao.append(lista)
     return(uniao)
 
+def uniaoMatrizes(listas):
+    uniao = [[ False for _ in range(12)] for _ in range(12)]
+    for numMatriz in range(len(listas)):
+        for matriz in listas:
+            for i in range(len(matriz)):
+                for j in range(len(matriz[i])):
+                    if matriz[i][j] and not uniao[i][j]:
+                        uniao[i][j] = True
+    return(uniao)
+
 def dominant(listas):
     dominantValues = set()
     for lista in listas:
@@ -48,7 +58,9 @@ def relational(listas):
     for lista in listas:
         for i in range(len(lista)):
             for j in range(i+1, len(lista)):
-                matriz[i][j] = True
+                indice1 = lista[i]
+                indice2 = lista[j]
+                matriz[indice1][indice2] = True
     return matriz
 
 def verificaTrue(matriz):
@@ -92,6 +104,9 @@ relacoes = []
 for i in range(len(listas)):
     relacoes.append(relational(listas[i]))
     print(nomes[i], verificaTrue(relacoes[i]))
+
+TotalRelacoes = uniaoMatrizes(relacoes)
+print("Total", verificaTrue(TotalRelacoes))
 
 compararMatrizes(relacoes, nomes)
 
