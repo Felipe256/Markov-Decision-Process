@@ -2,7 +2,7 @@ import ProgramacaoDinamicaMDP as pdMDP
 import ExponentialUtilityFunctionRSMDP as EUF
 import PiecewiseLinearTransformationRSMDP as PLT
 import ValueAtRiskRSMDP as VaT
-import copy
+import MeanVarianceRSMDP as MV
 import numpy as np
 from sortedcontainers import SortedDict
 import graficos
@@ -30,7 +30,7 @@ def calculaValorPoliticaEUT(politica, comeco, fim, quantidade, estados, acoes, n
     with open("EUT.txt", "w", encoding="utf-8") as arquivo:
         arquivo.write(str(ordenacoes))
 
-    #graficos.geraGrafico(intervalo, valores, "Interações de lambda sobre a politica", "lambda", "log(value)/lambda", cores, estilosLinha)
+        graficos.geraGrafico(intervalo, valores, "Interações de lambda sobre a politica", "lambda", "log(value)/lambda", cores, estilosLinha)
 
 def calculaValorPoliticaPLT(politica, comeco, fim, quantidade, estados, acoes, nomeUltimoEstado):
     intervalo = np.linspace(comeco, fim, num = quantidade)
@@ -100,19 +100,10 @@ def calculaValorPoliticaMV(politica, comeco, fim, quantidade, estados, acoes, no
     intervalo = np.linspace(comeco, fim, num = quantidade)
     valores = [[] for i in range(len(politica))]
     valoresExpe = valores.copy()
-    valoresQuad = valores.copy()
-    acoesQuad = {}
-    for estado in estados:
-        acoesQuad[estado] = {}
-        for acao in acoes[estado]:
-            acoesQuad[estado][acao] = {}
-            for estado_proximo in acoes[estado][acao]:
-                acoesQuad[estado][acao][estado_proximo] = {}
-                for recompensa in acoes[estado][acao][estado_proximo]:
-                    acoesQuad[estado][acao][estado_proximo][recompensa**2] = acoes[estado][acao][estado_proximo][recompensa]
+    valoresVar = valores.copy()
     for i in range(len(politica)):
-        valoresExpe[i] = pdMDP.iterativePolicyEvaluation(0.001, 500, politica[i], estados, acoes, 1, nomeUltimoEstado)
-        valoresQuad[i] = pdMDP.iterativePolicyEvaluation(0.001, 500, politica[i], estados, acoesQuad, 1, nomeUltimoEstado)
+        valoresExpe[i] = MV.iterativePolicyEvaluation(0.001, 500, politica[i], estados, acoes, 1, nomeUltimoEstado)
+        valoresVar[i] = MV.iterativeVariancePolicyEvaluation(0.001, 500, politica[i], estados, acoes, 1, nomeUltimoEstado, valoresExpe[i])
     cores = ["blue", "green", "red", "cyan", "pink", "black", "blue", "green", "red", "cyan", "pink", "black"]
     estilosLinha = ["-", "-", "-", "-", "-", "-", "--", "--", "--", "--", "--", "--"]
     ordenacoes = []
@@ -120,7 +111,7 @@ def calculaValorPoliticaMV(politica, comeco, fim, quantidade, estados, acoes, no
     for num in intervalo:
         d = SortedDict()
         for i in range(len(politica)):
-            valorS0 = valoresExpe[i]["S0"] + num * (valoresQuad[i]["S0"] - valoresExpe[i]["S0"]**2)   
+            valorS0 = valoresExpe[i]["S0"] + num * valoresVar[i]["S0"]
             valores[i].append(valorS0)
             d[valorS0] = i
         ordenacao = list(d.values())
@@ -130,7 +121,6 @@ def calculaValorPoliticaMV(politica, comeco, fim, quantidade, estados, acoes, no
         arquivo.write(str(ordenacoes))
 
     graficos.geraGrafico(intervalo, valores, "Interações de mi sobre a politica", "mi", "value", cores, estilosLinha)
-
 
 
 numEstado = {i for i in range(0,11)}
@@ -167,7 +157,7 @@ politicas = [
     {'S0': {4: 1}, 'S1': {4: 1}, 'S2': {4: 1}, 'S3': {4: 1}, 'S4': {4: 1}, 'S5': {4: 1}, 'S6': {4: 1}, 'S7': {4: 1}, 'S8': {4: 1}, 'S9': {4: 1}, 'S10': {4: 1}}
     ]
 
-#calculaValorPoliticaEUT(politicas, -0.8, 0.8, 1600, estados, acoes, "Sfinal")
+#calculaValorPoliticaEUT(politicas, -0.8, -0.4, 400, estados, acoes, "Sfinal")
 
 #calculaValorPoliticaPLT(politicas, 0.99, -0.99, 2000, estados, acoes, "Sfinal")
 
@@ -177,4 +167,4 @@ heuristica["Sfinal"] = 0
 calculaValorPoliticaVaR(heuristica, politicas, 0.001, 0.999, 10000, estados, acoes, "Sfinal")
 calculaValorPoliticaCVaR(heuristica, politicas, 0.001, 0.999, 10000, estados, acoes, "Sfinal")'''
 
-calculaValorPoliticaMV(politicas, -0.1, 0.5, 100000, estados, acoes, "Sfinal")
+calculaValorPoliticaMV(politicas, -1, 1, 100000, estados, acoes, "Sfinal")
